@@ -1,21 +1,21 @@
-import { TestBed, async, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HeroDetailComponent } from './hero-detail.component';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { HeroService } from '../hero.service';
 import { Location } from '@angular/common';
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 
 describe('HeroDetailComponent (shallow tests)', () => {
 
-  let fixture, mockActivatedRoute, mockHeroSerivce, mockLocation;
+  let fixture, mockActivatedRoute, mockHeroService, mockLocation;
 
   beforeEach(() => {
     mockActivatedRoute = {
       snapshot: { paramMap: { get: () => { return 3; }}}
     }
-    mockHeroSerivce = jasmine.createSpyObj(['getHero', 'updateHero']);
+    mockHeroService = jasmine.createSpyObj(['getHero', 'updateHero']);
     mockLocation = jasmine.createSpyObj(['back'])
 
     TestBed.configureTestingModule({
@@ -23,13 +23,13 @@ describe('HeroDetailComponent (shallow tests)', () => {
       declarations: [HeroDetailComponent],
       providers: [
         {provide: ActivatedRoute, useValue: mockActivatedRoute},
-        {provide: HeroService, useValue: mockHeroSerivce},
+        {provide: HeroService, useValue: mockHeroService},
         {provide: Location, useValue: mockLocation}
       ]
     });
     fixture = TestBed.createComponent(HeroDetailComponent);
 
-    mockHeroSerivce.getHero.and.returnValue(of({id: 3, name: 'SuperDude'}))
+    mockHeroService.getHero.and.returnValue(of({id: 3, name: 'SuperDude'}))
   });
 
   it(`should have the correct hero`, () => {
@@ -71,15 +71,15 @@ describe('HeroDetailComponent (shallow tests)', () => {
   // }))
 
   // version 3 using async and a promise in the component
-  it('should updateHero when save is called', async(() => {
-    mockHeroSerivce.updateHero.and.returnValue(of({}))
+  it('should updateHero when save is called', waitForAsync(() => {
+    mockHeroService.updateHero.and.returnValue(of({}))
 
     fixture.detectChanges();
     fixture.componentInstance.save();
     fixture.whenStable().then(() => {
-      console.log(1)
-      expect(mockHeroSerivce.updateHero).toHaveBeenCalled()
+      // console.log(1)
+      expect(mockHeroService.updateHero).toHaveBeenCalled()
     });
-    console.log(2)
+    // console.log(2)
   }))
 });

@@ -1,7 +1,7 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { HeroesComponent } from './heroes.component';
-import { of } from 'rxjs/observable/of';
-import { Component, Input, NO_ERRORS_SCHEMA } from '@angular/core';
+import { of } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { HeroService } from '../hero.service';
 import { By } from '@angular/platform-browser';
 
@@ -40,10 +40,19 @@ describe('HeroesComponent (shallow tests)', () => {
     expect(fixture.componentInstance.heroes.length).toBe(3)
   });
 
-  it('should render title in a h1 tag', () => {
+  it('should have the right count of li tags', () => {
     mockHeroService.getHeroes.and.returnValue(of(HEROES))
     fixture.detectChanges();
 
     expect(fixture.debugElement.queryAll(By.css('li')).length).toBe(3);
   });
+
+  // PROBLEM 4 - Add Missing Code
+  // it('should add a new li when add is called', () => {
+  //   mockHeroService.getHeroes.and.returnValue(of(HEROES))
+  //   mockHeroService.addHero.and.returnValue(of({id:1, name: 'Bob', strength: 2}))
+
+  //   fixture.componentInstance.add('Bob');
+  //   expect(fixture.debugElement.queryAll(By.css('li')).length).toBe(4);
+  // })
 });
